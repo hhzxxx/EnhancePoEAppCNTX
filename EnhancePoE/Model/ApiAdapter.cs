@@ -48,7 +48,7 @@ namespace EnhancePoE
             }
             else
             {
-                MessageBox.Show("Missing Settings!" +  Environment.NewLine + "Please set Accountname, Stash Tab and League.");
+                MessageBox.Show("缺少设置!" +  Environment.NewLine + "请输入账号名、赛季和仓库.");
             }
             IsFetching = false;
             return false;
@@ -100,10 +100,15 @@ namespace EnhancePoE
 
         private static void GenerateStashtabUris(string accName, string league)
         {
+            string baseUrl = "poe.game.qq.com";
+            if (Properties.Settings.Default.GameArea == 1)
+            {
+                baseUrl = "www.pathofexile.com";
+            }
             foreach (StashTab i in StashTabList.StashTabs)
             {
                 string stashTab = i.TabIndex.ToString();
-                i.StashTabUri = new Uri($"https://www.pathofexile.com/character-window/get-stash-items?accountName={accName}&tabIndex={stashTab}&league={league}");
+                i.StashTabUri = new Uri($"https://{baseUrl}/character-window/get-stash-items?accountName={accName}&tabIndex={stashTab}&league={league}");
             }
         }
 
@@ -130,7 +135,7 @@ namespace EnhancePoE
             }
             if (Properties.Settings.Default.SessionId == "")
             {
-                MessageBox.Show("Missing Settings!" + Environment.NewLine + "Please set PoE Session Id.");
+                MessageBox.Show("缺少设置!" + Environment.NewLine + "请输入PoE Session Id.");
                 return false;
             }
             // check rate limit
@@ -145,7 +150,12 @@ namespace EnhancePoE
                 return false;
             }
             IsFetching = true;
-            Uri propsUri = new Uri($"https://www.pathofexile.com/character-window/get-stash-items?accountName={accName}&tabs=1&league={league}");
+            string baseUrl = "poe.game.qq.com";
+            if (Properties.Settings.Default.GameArea == 1)
+            {
+                baseUrl = "www.pathofexile.com";
+            }
+            Uri propsUri = new Uri($"https://{baseUrl}/character-window/get-stash-items?accountName={accName}&tabs=1&league={league}");
 
             string sessionId = Properties.Settings.Default.SessionId;
 

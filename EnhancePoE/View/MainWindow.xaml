@@ -37,7 +37,7 @@
 			</Grid.RowDefinitions>
 			<TabControl Grid.Column="1"
 						Grid.Row="1">
-				<TabItem Header="General">
+				<TabItem Header="基础设置">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="10" />
@@ -78,6 +78,8 @@
 								<RowDefinition Height="5"></RowDefinition>
 								<RowDefinition Height="25"></RowDefinition>
 								<RowDefinition Height="10"></RowDefinition>
+								<RowDefinition Height="25"></RowDefinition>
+								<RowDefinition Height="10"></RowDefinition>
 							</Grid.RowDefinitions>
 							<TextBlock Grid.Column="1"
 									   Grid.Row="1"
@@ -88,35 +90,50 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="3"
 									   VerticalAlignment="Center"
-									   Text="Account Name:"
+									   Text="游戏服:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="The name of your account" />
-							<TextBox x:Name="accountName"
-									 Grid.Column="3"
-									 Grid.Row="3"
-									 Width="200"
-									 Text="{Binding Source={x:Static properties:Settings.Default}, Path=accName, Mode=TwoWay}" />
+									   ToolTip="游戏服" />
+							<ComboBox Grid.Column="3"
+									  Grid.Row="3"
+									  Width="200"
+									  VerticalContentAlignment="Center"
+									  SelectionChanged="ComboBox_SelectionChanged"
+									  SelectedIndex="{Binding Source={x:Static properties:Settings.Default}, Path=GameArea, Mode=TwoWay}">
+								<ComboBoxItem Content="腾讯国服"></ComboBoxItem>
+								<ComboBoxItem Content="国际服"></ComboBoxItem>
+							</ComboBox>
 							<TextBlock Grid.Column="1"
 									   Grid.Row="5"
 									   VerticalAlignment="Center"
-									   Text="PoE Session ID:"
+									   Text="账号名:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="PoE Session ID. Visit https://github.com/kosace/EnhancePoEApp for more information." />
-							<TextBox x:Name="sessionId"
+									   ToolTip="官网账号名，不是角色名称" />
+							<TextBox x:Name="accountName"
 									 Grid.Column="3"
 									 Grid.Row="5"
+									 Width="200"
+									 Text="{Binding Source={x:Static properties:Settings.Default}, Path=accName, Mode=TwoWay}" />
+							<TextBlock Grid.Column="1"
+									   Grid.Row="7"
+									   VerticalAlignment="Center"
+									   Text="POESESSID:"
+									   ToolTipService.InitialShowDelay="50"
+									   ToolTip="官网登陆后，浏览器F12找到cookie中的POESESSID" />
+							<TextBox x:Name="sessionId"
+									 Grid.Column="3"
+									 Grid.Row="7"
 									 Width="200"
 									 FontFamily="{StaticResource PasswordFont}"
 									 Text="{Binding Source={x:Static properties:Settings.Default}, Path=SessionId, Mode=TwoWay}" />
 							<TextBlock Grid.Column="1"
-									   Grid.Row="7"
+									   Grid.Row="9"
 									   VerticalAlignment="Center"
 									   Text="League:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="The league you are playing in." />
+									   ToolTip="例：永久 或者 S17赛季  国际服就是英文名称" />
 							<TextBox x:Name="League"
 									 Grid.Column="3"
-									 Grid.Row="7"
+									 Grid.Row="9"
 									 Width="200"
 									 Text="{Binding Source={x:Static properties:Settings.Default}, Path=League, Mode=TwoWay}" />
 						</Grid>
@@ -149,15 +166,15 @@
 									   Grid.Row="1"
 									   VerticalAlignment="Center"
 									   Grid.ColumnSpan="2"
-									   Text="Recipes"
+									   Text="配方类型"
 									   FontSize="24"
 									   FontWeight="Bold" />
 							<TextBlock Grid.Column="1"
 									   Grid.Row="3"
 									   VerticalAlignment="Center"
-									   Text="Chaos Orb Recipe:"
+									   Text="混沌石:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Activates Chaos Recipe. Mutually exclusiv to Regal Recipe." />
+									   ToolTip="激活混沌石就别选富豪石" />
 							<CheckBox x:Name="ChaosRecipeCheckBox"
 									  Grid.Column="3"
 									  Grid.Row="3"
@@ -167,9 +184,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="5"
 									   VerticalAlignment="Center"
-									   Text="Regal Recipe:"
+									   Text="富豪石:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Activates Regal Recipe. Mutually exclusive to Chaos Recipe." />
+									   ToolTip="激活富豪石就别选混沌石" />
 							<CheckBox x:Name="RegalRecipeCheckBox"
 									  Grid.Column="3"
 									  Grid.Row="5"
@@ -179,9 +196,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="7"
 									   VerticalAlignment="Center"
-									   Text="Exalted Shard Recipe:"
+									   Text="崇高碎片:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Activates Exalted Shard Recipe. Not fully functional at the moment. Visit github for more information." />
+									   ToolTip="原作者说可能没法用吧，有时间看看源码." />
 							<CheckBox x:Name="ExaltedRecipeCheckBox"
 									  Grid.Column="3"
 									  Grid.Row="7"
@@ -190,9 +207,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="9"
 									   VerticalAlignment="Center"
-									   Text="Fill Greedy Mode:"
+									   Text="物等模式:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Sets will be filled with more than 1 low ilvl item. Deactivate to only allow 1 low ilvl item." />
+									   ToolTip="不勾选就只选1个低物等和多个高物等。勾选就不管物等符合配方都选。（指75吧）" />
 							<CheckBox x:Name="LimitChaosCheckBox"
 									  Grid.Column="3"
 									  Grid.Row="9"
@@ -201,9 +218,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="11"
 									   VerticalAlignment="Center"
-									   Text="Include Identified Items:"
+									   Text="包括已鉴定:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Also counts identified Items for 1 chaos per set." />
+									   ToolTip="勾选就会包括已鉴定的，2c变1c" />
 							<CheckBox x:Name="IncludeIdentifiedCheckBox"
 									  Grid.Column="3"
 									  Grid.Row="11"
@@ -238,15 +255,15 @@
 									   Grid.Row="1"
 									   VerticalAlignment="Center"
 									   Grid.ColumnSpan="2"
-									   Text="Sound"
+									   Text="声音"
 									   FontSize="24"
 									   FontWeight="Bold" />
                             <TextBlock Grid.Column="1"
 									   Grid.Row="3"
 									   VerticalAlignment="Center"
-									   Text="Notification Sound:"
+									   Text="提示音:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Plays a sound everytime you have to refresh your lootfilter." />
+									   ToolTip="每次需要刷新过滤器时都会播放声音." />
                             <CheckBox x:Name="PlaySoundCheckBox"
 									  Grid.Column="3"
 									  Grid.Row="3"
@@ -255,9 +272,9 @@
                             <TextBlock Grid.Column="1"
 									   Grid.Row="5"
 									   VerticalAlignment="Center"
-									   Text="Sound Volume:"
+									   Text="音量:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Sound Volume" />
+									   ToolTip="音量" />
                             <Slider x:Name="VolumeSlider"
 									Width="200"
 									Grid.Column="3"
@@ -273,9 +290,9 @@
                             <TextBlock Grid.Column="1"
 									   Grid.Row="7"
 									   VerticalAlignment="Center"
-									   Text="Lootfilter Sound:"
+									   Text="过滤器提示音:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="The location of your Lootfilte sound mp3 file (*.mp3). If you don't choose a file the default sound will be used" />
+									   ToolTip="过滤器 声音 mp3 文件 (*.mp3) 的位置。 如果您不选择文件，将使用默认声音" />
                             <Button Grid.Column="3"
 									Grid.Row="7"
 									x:Name="FilterSoundLocationDialog"
@@ -302,9 +319,9 @@
                             <TextBlock Grid.Column="1"
                                        Grid.Row="9"
                                        VerticalAlignment="Center"
-                                       Text="Item Set Sound:"
+                                       Text="成套提示音:"
                                        ToolTipService.InitialShowDelay="50"
-                                       ToolTip="The location of your Item Set Sound mp3 file (*.mp3). If you don't choose a file the default sound will be used" />
+                                       ToolTip="物品集声音 mp3 文件 (*.mp3) 的位置。 如果您不选择文件，将使用默认声音" />
                             <Button Grid.Column="3"
                                     Grid.Row="9"
                                     x:Name="ItemPickupLocationDialog"
@@ -356,15 +373,15 @@
 									   Grid.Row="1"
 									   VerticalAlignment="Center"
 									   Grid.ColumnSpan="2"
-									   Text="Hotkeys"
+									   Text="热键"
 									   FontSize="24"
 									   FontWeight="Bold" />
 							<TextBlock Grid.Column="1"
 									   Grid.Row="3"
 									   VerticalAlignment="Center"
-									   Text="Toggle Overlay:"
+									   Text="开关叠加层:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Hotkey for showing/ hiding the overlay. While stopped there will be no requests to the server."></TextBlock>
+									   ToolTip="开关叠加层. 关闭时不会向服务器发出请求"></TextBlock>
 							<Button x:Name="CustomHotkeyToggle"
 									Width="200"
 									Grid.Row="3"
@@ -390,9 +407,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="5"
 									   VerticalAlignment="Center"
-									   Text="Toggle Fetching:"
+									   Text="查询:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Hotkey for starting/ stopping refreshing data." />
+									   ToolTip="开始或取消查询" />
 							<Button x:Name="RefreshHotkey"
 									Width="200"
 									Grid.Row="5"
@@ -418,9 +435,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="7"
 									   VerticalAlignment="Center"
-									   Text="Toggle StashTab:"
+									   Text="仓库网格:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Hotkey for showing/ hiding the stashtabs overlay." />
+									   ToolTip="显示或隐藏仓库网格." />
 							<Button x:Name="StashTabHotkey"
 									Width="200"
 									Grid.Row="7"
@@ -490,9 +507,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="3"
 									   VerticalAlignment="Center"
-									   Text="Full Set Threshold:"
+									   Text="全套阈值:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Number of full sets you want. If you have collected this amount of items of an itemtype, itemtype will get deactivated. Leave at 0 for auto calculation, that means 4 sets for each normal tab and 16 sets for each quad tab.  " />
+									   ToolTip="你想要的全套数量。 如果您收集了一定数量的某个项目类型的项目，项目类型将被停用。 保留为 0 以进行自动计算，这意味着每个普通选项卡有 4 组，每个四组选项卡有 16 组。(不知道啥意思 默认0吧) " />
 							<TextBox x:Name="Sets"
 									 Grid.Column="3"
 									 Grid.Row="3"
@@ -501,9 +518,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="5"
 									   VerticalAlignment="Center"
-									   Text="Stashtab Mode:"
+									   Text="仓库选择模式:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="The stashtab fetching mode. Stashtabs will automatically be added." />
+									   ToolTip="id：仓库的序号，从左往右从0开始数。Prefix：" />
 							<ComboBox Grid.Column="3"
 									  Grid.Row="5"
 									  Width="200"
@@ -517,9 +534,9 @@
 									   Grid.Column="1"
 									   Grid.Row="7"
 									   VerticalAlignment="Center"
-									   Text="StashTab Prefix:"
+									   Text="仓库名前缀:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Every stashtab which name starts with this prefix will be added."
+									   ToolTip="将添加名称以该前缀开头的每个仓库。"
 									   Visibility="{Binding NameVisible}" />
 							<TextBox Name="StashTabNameTextBox"
 									 Grid.Column="3"
@@ -531,9 +548,9 @@
 									   Grid.Column="1"
 									   Grid.Row="7"
 									   VerticalAlignment="Center"
-									   Text="StashTab Indices:"
+									   Text="仓库名序号:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Every stashtab with this indices will be added. Seperate them by ',' e.g. '0,1,2,3,4,5' will fetch first 6 stashtabs."
+									   ToolTip="仓库的序号，从左往右从0开始数. 用','分割. '0,1,2,3,4,5' 会从这6个仓库计算"
 									   Visibility="{Binding IndicesVisible}" />
 							<TextBox Name="StashTabIndicesTextBox"
 									 Grid.Column="3"
@@ -544,9 +561,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="9"
 									   VerticalAlignment="Center"
-									   Text="Fetch on new Map:"
+									   Text="新区域时自动获取:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Automatically fetches when you join a new Zone (Hideout excluded). REOPEN the overlay to take effect." />
+									   ToolTip="当您加入新区域时自动获取（不包括藏身处）。 重新打开叠加层以生效。" />
 							<CheckBox x:Name="AutoFetchCheckBox"
 									  Grid.Column="3"
 									  Grid.Row="9"
@@ -557,9 +574,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="11"
 									   VerticalAlignment="Center"
-									   Text="Log File Location:"
+									   Text="日志文件路径:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="The location of you PoE log file (Client.txt). The standard path is: C:/Programs/Grinding Gear Games/Path of Exile/logs/Client.txt." />
+									   ToolTip="游戏目录 log file (Client.txt). /Path of Exile/logs/Client.txt." />
 							<Button Grid.Column="3"
 									Grid.Row="11"
 									x:Name="LogLocationDialog"
@@ -586,9 +603,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="13"
 									   VerticalAlignment="Center"
-									   Text="Language:"
+									   Text="语言:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Fetch on new Map only works in the correct language. Set it to the same as your PoE client." />
+									   ToolTip="获取新地图仅适用于正确的语言。 将其设置为与您的 PoE 客户端相同。" />
 							<ComboBox Grid.Column="3"
 									  Grid.Row="13"
 									  Width="200"
@@ -606,9 +623,9 @@
                             <TextBlock Grid.Column="1"
                                        Grid.Row="15"
                                        VerticalAlignment="Center"
-                                       Text="Close to Tray:"
+                                       Text="关闭应用程序时最小化到托盘:"
                                        ToolTipService.InitialShowDelay="50"
-                                       ToolTip="Minimizes to Tray when closing the application." />
+                                       ToolTip="关闭应用程序时最小化到托盘。" />
 							<CheckBox x:Name="hideOnClose"
 									  Grid.Column="3"
 									  Grid.Row="15"
@@ -618,7 +635,7 @@
 					</Grid>
 				</TabItem>
 				<!-- OVERLAYS -->
-				<TabItem Header="Overlays">
+				<TabItem Header="叠加层">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="10" />
@@ -673,16 +690,16 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="1"
 									   Grid.ColumnSpan="2"
-									   Text="Main Overlay"
+									   Text="主叠加层"
 									   FontSize="24"
 									   VerticalAlignment="Center"
 									   FontWeight="Bold" />
 							<TextBlock Grid.Column="1"
 									   Grid.Row="5"
 									   VerticalAlignment="Center"
-									   Text="Opacity Overlay:"
+									   Text="透明度:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="The background opacity of the overlay from 0 (0%) to 1 (100%)." />
+									   ToolTip="透明度 0 (0%) to 1 (100%)." />
 							<Slider x:Name="OpacityOverlay"
 									Width="200"
 									Grid.Column="3"
@@ -697,9 +714,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="7"
 									   VerticalAlignment="Center"
-									   Text="Show Item Amounts:"
+									   Text="显示物品数量:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Shows little numbers in your itemtypes in the Main Overlay." />
+									   ToolTip="在主叠加层的项目类型中显示小数字。Total Items 所有物品  Items Missing 缺少物品" />
 							<ComboBox Grid.Column="3"
 									  Grid.Row="7"
 									  Width="200"
@@ -714,9 +731,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="3"
 									   VerticalAlignment="Center"
-									   Text="Overlay Mode:"
+									   Text="叠加层模式:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="The design of the Main Overlay." />
+									   ToolTip="叠加层模式." />
 							<ComboBox Grid.Column="3"
 									  Grid.Row="3"
 									  Width="200"
@@ -731,9 +748,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="9"
 									   VerticalAlignment="Center"
-									   Text="Lock Position:"
+									   Text="锁定位置:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Locks the position of the main overlay in one place." />
+									   ToolTip="锁定位置." />
 							<CheckBox x:Name="LockOverlayCheckBox"
 									  Grid.Column="3"
 									  Grid.Row="9"
@@ -772,14 +789,14 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="1"
 									   Grid.ColumnSpan="2"
-									   Text="Stashtab Overlay"
+									   Text="仓库网格"
 									   FontSize="24"
 									   VerticalAlignment="Center"
 									   FontWeight="Bold" />
 							<TextBlock Grid.Column="1"
 									   Grid.Row="3"
 									   VerticalAlignment="Center"
-									   Text="Opacity StashTab Overlay:"
+									   Text="透明度:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The background opacity of the stashtabs overlay from 0 (0%) to 1 (100%)." />
 							<Slider x:Name="OpacityStashTab"
@@ -796,7 +813,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="5"
 									   VerticalAlignment="Center"
-									   Text="Stashtab Background Color:"
+									   Text="背景色:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The color of the background of the Stashtab Overlay. Make this opaque if you want." />
 							<xctk:ColorPicker Grid.Column="3"
@@ -808,7 +825,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="7"
 									   VerticalAlignment="Center"
-									   Text="Highlight Color:"
+									   Text="高亮色:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The color that highlights the items in your stashtab overlay." />
 							<xctk:ColorPicker Grid.Column="3"
@@ -820,9 +837,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="9"
 									   VerticalAlignment="Center"
-									   Text="Highlight Mode:"
+									   Text="高亮模式:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Item by Item: highlights each item after another. &#x0a;Set by Set: highlights a full set at once, each after another. &#x0a;All Items: highlights all items at once." />
+									   ToolTip="Item by Item：逐项突出显示每个项目。 &#x0a;Set by Set：一次突出显示一个完整的集合，一个接一个。 &#x0a;所有项目：一次突出显示所有项目。" />
 							<ComboBox Grid.Column="3"
 									  Grid.Row="9"
 									  Name="HighlightModeComboBox"
@@ -836,9 +853,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="11"
 									   VerticalAlignment="Center"
-									   Text="Tab Header Margin:"
+									   Text="表头边距:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="The starting margin of the tab headers in the Stashtab Overlay." />
+									   ToolTip="表头标题的起始边距" />
 							<Slider Grid.Column="3"
 									Grid.Row="11"
 									Name="TabHeaderMarginSlider"
@@ -854,7 +871,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="13"
 									   VerticalAlignment="Center"
-									   Text="Tab Header Width:"
+									   Text="表头宽度:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The width of the tab headers in Stashtab Overlay." />
 							<Slider Grid.Column="3"
@@ -872,9 +889,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="15"
 									   VerticalAlignment="Center"
-									   Text="Tab Header Gap:"
+									   Text="网格间隙:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="The gap between tab headers in the Stashtab Overlay." />
+									   ToolTip="网格间隙" />
 							<Slider Grid.Column="3"
 									Grid.Row="15"
 									Name="TabHeaderGapSlider"
@@ -891,7 +908,7 @@
 					</Grid>
 				</TabItem>
 				<!-- LOOTFILTER -->
-				<TabItem Header="Lootfilter">
+				<TabItem Header="过滤">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="10" />
@@ -945,9 +962,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="3"
 									   VerticalAlignment="Center"
-									   Text="Lootfilter Manipulation:"
+									   Text="过滤开关:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Activates manipulation of lootfilter. When active your lootfilter gets rewritten as soon as an itemtype changes." />
+									   ToolTip="激活 过滤 的操作。 激活时，一旦项目类型发生变化，您的 过滤文件 就会被重写。（备份你的过滤文件）" />
 							<CheckBox Grid.Column="3"
 									  Grid.Row="3"
 									  x:Name="LootfilterActiveCheckbox"
@@ -956,7 +973,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="5"
 									   VerticalAlignment="Center"
-									   Text="Online Filter:"
+									   Text="在线过滤:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="Activates working with on-line filters." />
 							<CheckBox Grid.Column="3"
@@ -969,7 +986,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="7"
 									   VerticalAlignment="Center"
-									   Text="Lootfilter Location:"
+									   Text="本地过滤文件路径:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The path to your lootfilter. Standard path is: 'Username/Documents/My Games/Path of Exile'."
 									   Visibility="{Binding LootfilterFileDialogVisible}" />
@@ -977,7 +994,7 @@
 									   Grid.Row="7"
 									   VerticalAlignment="Center"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Name of filter to control. Can be found by the link. You should be signed in."
+									   ToolTip="过滤器名称 网页上的，不知道国服能不能用"
 									   Visibility="{Binding LootfilterOnlineFilterNameVisible}">
 								Filter Name (<Hyperlink NavigateUri="{x:Static storage:OnlineFilterStorage.FiltersUrl}"
 														RequestNavigate="Hyperlink_RequestNavigateByAccName">here</Hyperlink>):</TextBlock>
@@ -1014,9 +1031,9 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="9"
 									   VerticalAlignment="Center"
-									   Text="Show Icon on Map:"
+									   Text="激活小地图上的图标:"
 									   ToolTipService.InitialShowDelay="50"
-									   ToolTip="Activates icons on the minimap." />
+									   ToolTip="激活小地图上的图标." />
 							<CheckBox Grid.Column="3"
 									  Grid.Row="9"
 									  x:Name="LootfilterIconsCheckBox"
@@ -1063,7 +1080,7 @@
 									   FontWeight="Bold" />
 							<TextBlock Grid.Column="1"
 									   Grid.Row="3"
-									   Text="Ring Color:"
+									   Text="戒指 Color:"
 									   VerticalAlignment="Center"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The color of rings. This color will also be written into your lootfilter if you activated Lootfilter Manipulation.." />
@@ -1076,7 +1093,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="5"
 									   VerticalAlignment="Center"
-									   Text="Amulet Color:"
+									   Text="项链 Color:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The color of amulets. This color will also be written into your lootfilter if you activated Lootfilter Manipulation.." />
 							<xctk:ColorPicker Grid.Column="3"
@@ -1088,7 +1105,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="7"
 									   VerticalAlignment="Center"
-									   Text="Belt Color:"
+									   Text="腰带 Color:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The color of belts. This color will also be written into your lootfilter if you activated Lootfilter Manipulation.." />
 							<xctk:ColorPicker Grid.Column="3"
@@ -1100,7 +1117,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="9"
 									   VerticalAlignment="Center"
-									   Text="Boots Color:"
+									   Text="鞋子 Color:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The color of boots. This color will also be written into your lootfilter if you activated Lootfilter Manipulation." />
 							<xctk:ColorPicker Grid.Column="3"
@@ -1112,7 +1129,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="11"
 									   VerticalAlignment="Center"
-									   Text="Gloves Color:"
+									   Text="手套 Color:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The color of gloves. This color will also be written into your lootfilter if you activated Lootfilter Manipulation." />
 							<xctk:ColorPicker Grid.Column="3"
@@ -1124,7 +1141,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="13"
 									   VerticalAlignment="Center"
-									   Text="Helmet Color:"
+									   Text="头盔 Color:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The color of helmets. This color will also be written into your lootfilter if you activated Lootfilter Manipulation." />
 							<xctk:ColorPicker Grid.Column="3"
@@ -1136,7 +1153,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="15"
 									   VerticalAlignment="Center"
-									   Text="Body Armour Color:"
+									   Text="衣服 Armour Color:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The color of body armours. This color will also be written into your lootfilter if you activated Lootfilter Manipulation.." />
 							<xctk:ColorPicker Grid.Column="3"
@@ -1148,7 +1165,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="17"
 									   VerticalAlignment="Center"
-									   Text="Weapons Color:"
+									   Text="武器 Color:"
 									   ToolTipService.InitialShowDelay="50"
 									   ToolTip="The color of weapons. This color will also be written into your lootfilter if you activated Lootfilter Manipulation.." />
 							<xctk:ColorPicker Grid.Column="3"
@@ -1192,7 +1209,7 @@
 							<TextBlock Grid.Column="1"
 									   Grid.Row="1"
 									   Grid.ColumnSpan="2"
-									   Text="Always Active"
+									   Text="总是显示"
 									   FontSize="24"
 									   VerticalAlignment="Center"
 									   FontWeight="Bold" />
@@ -1323,6 +1340,19 @@
 							 FontSize="12"
 							 Text="by kosace " />
 					</TextBlock.Inlines></TextBlock>
+				<TextBlock Grid.Column="3"
+					   Grid.Row="3"
+					   Margin="0,10,0,10"
+					   FontSize="12"
+					   VerticalAlignment="Center"
+					   TextAlignment="Center"
+					   Text="汉化 ">
+								<TextBlock.Inlines>
+									<Run FontFamily="Segoe UI"
+										 FontSize="12"
+										 Text="by lolixxx " />
+								</TextBlock.Inlines>
+							</TextBlock>
 				<TextBlock 
 					Grid.Column="1"
 					Grid.Row="3"
@@ -1340,18 +1370,18 @@
 					-->
 				<Button x:Name="RunButton"
 						Click="RunButton_Click"
-						Content="Run Overlay"
+						Content="运行"
 						Grid.Column="3"
 						Grid.Row="2" />
 				<Button x:Name="SaveButton"
 						Click="SaveButton_Click_1"
-						Content="Save Settings"
+						Content="保存设置"
 						Grid.Column="1"
 						Grid.Row="2" />
 				<Button x:Name="ResetButton"
 						Click="ResetButton_Click"
 						Width="100"
-						Content="Reset Settings"
+						Content="重置设置"
 						Grid.Column="2"
 						Grid.Row="2" />
 				<TextBlock Grid.Column="3"

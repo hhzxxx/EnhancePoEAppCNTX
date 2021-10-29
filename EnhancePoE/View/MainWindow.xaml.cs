@@ -273,14 +273,14 @@ namespace EnhancePoE
                 {
                     stashTabOverlay.Hide();
                 }
-                RunButton.Content = "Run Overlay";
+                RunButton.Content = "运行";
             }
             else
             {
                 if (CheckAllSettings())
                 {
                     overlay.Show();
-                    RunButton.Content = "Stop Overlay";
+                    RunButton.Content = "停止运行";
                 }
             }
             //bool ready = CheckAllSettings();
@@ -437,15 +437,15 @@ namespace EnhancePoE
             bool autoFetch = Properties.Settings.Default.AutoFetch;
 
             List<string> missingSettings = new List<string>();
-            string errorMessage = "Please add: \n";
+            string errorMessage = "请填写: \n";
 
             if (accName == "")
             {
-                missingSettings.Add("- Account Name \n");
+                missingSettings.Add("- 账号名 \n");
             }
             if (sessId == "")
             {
-                missingSettings.Add("- PoE Session ID \n");
+                missingSettings.Add("- PoESessionID \n");
             }
             if (league == "")
             {
@@ -455,12 +455,12 @@ namespace EnhancePoE
             {
                 if (!lootfilterOnline && lootfilterLocation == "")
                 {
-                    missingSettings.Add("- Lootfilter Location \n");
+                    missingSettings.Add("- 过滤器路径 \n");
                 }
 
                 if (lootfilterOnline && lootfilterOnlineName == "")
                 {
-                    missingSettings.Add("- Lootfilter Name \n");
+                    missingSettings.Add("- 在线过滤器名称 \n");
                 }
             }
             if (autoFetch)
@@ -474,14 +474,14 @@ namespace EnhancePoE
             {
                 if (Properties.Settings.Default.StashTabIndices == "")
                 {
-                    missingSettings.Add("- StashTab Index");
+                    missingSettings.Add("- 仓库序号");
                 }
             }
             else if (Properties.Settings.Default.StashtabMode == 1)
             {
                 if (Properties.Settings.Default.StashTabName == "")
                 {
-                    missingSettings.Add("- StashTab Name");
+                    missingSettings.Add("- 仓库名称");
                 }
             }
 
@@ -500,7 +500,7 @@ namespace EnhancePoE
                 errorMessage += setting;
             }
 
-            System.Windows.MessageBox.Show(errorMessage, "Missing Settings", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show(errorMessage, "缺少设置", MessageBoxButton.OK, MessageBoxImage.Error);
             return false;
         }
 

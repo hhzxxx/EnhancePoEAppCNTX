@@ -26,7 +26,7 @@ namespace EnhancePoE
         private static readonly double deactivatedOpacity = .1;
         private static readonly double activatedOpacity = 1;
 
-        private static readonly int fetchCooldown = 30;
+        private static readonly int fetchCooldown = 10;
 
         public static LogWatcher Watcher { get; set; }
 
@@ -338,7 +338,7 @@ namespace EnhancePoE
             }
             if(!Properties.Settings.Default.ChaosRecipe && !Properties.Settings.Default.RegalRecipe && !Properties.Settings.Default.ExaltedRecipe)
             {
-                MessageBox.Show("No recipes are enabled. Please pick a recipe.", "No Recipes", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("没有配方应用，请选择一个配方.", "没有配方", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -432,7 +432,7 @@ namespace EnhancePoE
                 {
                     if (Properties.Settings.Default.StashTabIndices == "")
                     {
-                        MessageBox.Show("Missing Settings!" + Environment.NewLine + "Please set Stashtab Indices.");
+                        MessageBox.Show("缺少设置!" + Environment.NewLine + "输入仓库序号.");
                         return;
                     }
                 }
@@ -440,7 +440,7 @@ namespace EnhancePoE
                 {
                     if (Properties.Settings.Default.StashTabName == "")
                     {
-                        MessageBox.Show("Missing Settings!" + Environment.NewLine + "Please set Stashtab Prefix.");
+                        MessageBox.Show("缺少设置!" + Environment.NewLine + "输入仓库名称.");
                         return;
                     }
                 }

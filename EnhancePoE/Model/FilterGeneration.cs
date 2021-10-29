@@ -103,7 +103,7 @@ namespace EnhancePoE.Model
             }
             else
             {
-                baseType += itemClass;
+                baseType += "\"" + itemClass + "\"";
             }
 
             result = result + baseType + nl + tab;

@@ -334,7 +334,7 @@
 					 Maximum="10"
 					 IsIndeterminate="{Binding IsIndeterminate}"
 					 Margin="10,10,10,0"
-					 Foreground="Aqua"
+					 Foreground="Black"
 					 Background="AntiqueWhite"
 					 BorderThickness="0,0,0,0"
 					 x:Name="OverlayProgressBar"></ProgressBar>
