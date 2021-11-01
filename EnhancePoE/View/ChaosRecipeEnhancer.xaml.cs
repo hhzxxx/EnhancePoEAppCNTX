@@ -415,6 +415,7 @@ namespace EnhancePoE
                 FetchButtonColor = Brushes.Green;
                 FetchingActive = false;
             });
+            ApiAdapter.FetchError = false;
             Trace.WriteLine("end of fetch function reached");
 
         }

@@ -224,7 +224,7 @@ namespace EnhancePoE.Model
                     continue;
                 }
                 if (ItemList[i].ilvl <= 74)
-                {
+                { 
                     ItemListChaos.Add(ItemList[i]);
                     ItemList.RemoveAt(i);
                 }

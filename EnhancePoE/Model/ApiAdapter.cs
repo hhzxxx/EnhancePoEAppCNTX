@@ -15,6 +15,39 @@ namespace EnhancePoE
     public class ApiAdapter
     {
 
+        private static HttpClient _httpClient;
+        private readonly static object _lock = new object();
+        private readonly static ApiAdapter _httpClientUtils = new ApiAdapter();
+
+        static ApiAdapter()
+        {
+            _httpClient = GetHttpClient();
+        }
+
+        public static ApiAdapter GetHttpClientUtils()
+        {
+            return _httpClientUtils;
+        }
+
+        private ApiAdapter()
+        {
+
+        }
+
+        private static HttpClient GetHttpClient()
+        {
+            lock (_lock)
+            {
+                if (_httpClient == null)
+                {
+                    var handler = new HttpClientHandler() { UseCookies = false };
+                    _httpClient = new HttpClient(handler);
+                    _httpClient.Timeout = TimeSpan.FromSeconds(1800);
+                }
+            }
+            return _httpClient;
+        }
+
         public static bool IsFetching { get; set; } = false;
         private static StashTabPropsList PropsList { get; set; }
         public static bool FetchError { get; set; } = false;
@@ -159,52 +192,45 @@ namespace EnhancePoE
 
             string sessionId = Properties.Settings.Default.SessionId;
 
-            var cC = new CookieContainer();
-            cC.Add(propsUri, new Cookie("POESESSID", sessionId));
 
-            using (var handler = new HttpClientHandler() { CookieContainer = cC })
-            using (HttpClient client = new HttpClient(handler))
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, propsUri);
+            message.Headers.Add("Host", baseUrl);
+            message.Headers.Add("Cookie", "POESESSID=" + sessionId);
+            message.Headers.Add("User-Agent", $"EnhancePoEApp/v{Assembly.GetExecutingAssembly().GetName().Version}");
+
+            HttpResponseMessage res = await _httpClient.SendAsync(message);
+
+            if (res.IsSuccessStatusCode)
             {
-                //Trace.WriteLine("is here");
-                // add user agent
-                client.DefaultRequestHeaders.Add("User-Agent", $"EnhancePoEApp/v{Assembly.GetExecutingAssembly().GetName().Version}");
-                using (HttpResponseMessage res = await client.GetAsync(propsUri))
+                using (HttpContent content = res.Content)
                 {
-                    //Trace.WriteLine("is NOT here");
-                    if (res.IsSuccessStatusCode)
-                    {
-                        //Trace.WriteLine("is not herre");
-                        using (HttpContent content = res.Content)
-                        {
-                            string resContent = await content.ReadAsStringAsync();
-                            //Trace.Write(resContent);
-                            PropsList = JsonSerializer.Deserialize<StashTabPropsList>(resContent);
+                    string resContent = await content.ReadAsStringAsync();
+                    //Trace.Write(resContent);
+                    PropsList = JsonSerializer.Deserialize<StashTabPropsList>(resContent);
 
-                            Trace.WriteLine(res.Headers, "res headers");
+                    Trace.WriteLine(res.Headers, "res headers");
 
-                            // get new rate limit values
-                            //RateLimit.IncreaseRequestCounter();
-                            string rateLimit = res.Headers.GetValues("X-Rate-Limit-Account").FirstOrDefault();
-                            string rateLimitState = res.Headers.GetValues("X-Rate-Limit-Account-State").FirstOrDefault();
-                            string responseTime = res.Headers.GetValues("Date").FirstOrDefault();
-                            RateLimit.DeserializeRateLimits(rateLimit, rateLimitState);
-                            RateLimit.DeserializeResponseSeconds(responseTime);
-                        }
-                    }
-                    else
-                    {
-                        if(res.StatusCode == HttpStatusCode.Forbidden)
-                        {
-                            System.Windows.MessageBox.Show("Connection forbidden. Please check your Accountname and POE Session ID. You may have to refresh your POE Session ID sometimes.", "Error fetching data", MessageBoxButton.OK, MessageBoxImage.Error);
-                        } 
-                        else
-                        {
-                            System.Windows.MessageBox.Show(res.ReasonPhrase, "Error fetching data", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                        FetchError = true;
-                        return false;
-                    }
+                    // get new rate limit values
+                    //RateLimit.IncreaseRequestCounter();
+                    string rateLimit = res.Headers.GetValues("X-Rate-Limit-Account").FirstOrDefault();
+                    string rateLimitState = res.Headers.GetValues("X-Rate-Limit-Account-State").FirstOrDefault();
+                    string responseTime = res.Headers.GetValues("Date").FirstOrDefault();
+                    RateLimit.DeserializeRateLimits(rateLimit, rateLimitState);
+                    RateLimit.DeserializeResponseSeconds(responseTime);
                 }
+            }
+            else
+            {
+                if(res.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    System.Windows.MessageBox.Show("Connection forbidden. Please check your Accountname and POE Session ID. You may have to refresh your POE Session ID sometimes.", "Error fetching data", MessageBoxButton.OK, MessageBoxImage.Error);
+                } 
+                else
+                {
+                    System.Windows.MessageBox.Show(res.ReasonPhrase, "Error fetching data", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                FetchError = true;
+                return false;
             }
 
             //await Task.Delay(1000);
@@ -237,26 +263,41 @@ namespace EnhancePoE
             IsFetching = true;
             List<Uri> usedUris = new List<Uri>();
 
+            bool flag = true;
+
             string sessionId = Properties.Settings.Default.SessionId;
 
-            var cookieContainer = new CookieContainer();
-            using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
-            using (HttpClient client = new HttpClient(handler))
-            {
-                // add user agent
-                client.DefaultRequestHeaders.Add("User-Agent", $"EnhancePoEApp/v{Assembly.GetExecutingAssembly().GetName().Version}");
-                foreach (StashTab i in StashTabList.StashTabs)
+            List<Task> tasks = new List<Task>();
+            Parallel.ForEach(StashTabList.StashTabs, i =>
                 {
-                    // check rate limit ban
-                    if (RateLimit.CheckForBan())
+                    var t = Task.Run(async () =>
                     {
-                        return false;
-                    }
-                    if (!usedUris.Contains(i.StashTabUri))
-                    {
-                        cookieContainer.Add(i.StashTabUri, new Cookie("POESESSID", sessionId));
-                        using (HttpResponseMessage res = await client.GetAsync(i.StashTabUri))
+                        // check rate limit ban
+                        try
                         {
+                            if (RateLimit.CheckForBan())
+                            {
+                                flag = false;
+                            }
+                            if (!usedUris.Contains(i.StashTabUri))
+                            {
+                                string baseUrl = "poe.game.qq.com";
+                                if (Properties.Settings.Default.GameArea == 1)
+                                {
+                                    baseUrl = "www.pathofexile.com";
+                                }
+                                HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, i.StashTabUri);
+                                message.Headers.Add("Host", baseUrl);
+                                message.Headers.Add("Cookie", "POESESSID="+sessionId);
+                                message.Headers.Add("User-Agent", $"EnhancePoEApp/v{Assembly.GetExecutingAssembly().GetName().Version}");
+
+                                Trace.WriteLine(i.TabIndex + "start" + System.Environment.TickCount);
+
+                                HttpResponseMessage res = await _httpClient.SendAsync(message);
+
+
+                            Trace.WriteLine(i.TabIndex + "end" + System.Environment.TickCount);
+
                             usedUris.Add(i.StashTabUri);
                             if (res.IsSuccessStatusCode)
                             {
@@ -276,29 +317,35 @@ namespace EnhancePoE
                                     i.ItemList = deserializedContent.items;
                                     i.Quad = deserializedContent.quadLayout;
 
-                                    //String mappingContentRaw;
-                                    //using (var mappingClient = new WebClient())
-                                    //{
-                                    //    mappingContentRaw = mappingClient.DownloadString("https://raw.githubusercontent.com/kosace/EnhancePoEApp/master/itemClasses.json");
-                                    //}
-                                    //var mappingContentDict = JsonSerializer.Deserialize<Dictionary<string, string>>(mappingContentRaw);
                                     i.CleanItemList();
                                 }
                             }
                             else
                             {
                                 FetchError = true;
-                                System.Windows.MessageBox.Show(res.ReasonPhrase, "Error fetching data", MessageBoxButton.OK, MessageBoxImage.Error);
-                                return false;
+                                    System.Windows.MessageBox.Show(res.ReasonPhrase, "Error fetching data", MessageBoxButton.OK, MessageBoxImage.Error);
+                                flag = false;
+                            }
                             }
                         }
-                    }
-                    //await Task.Delay(1000);
-                }
-            }
+                        catch (Exception e)
+                        {
+                            flag = false;
+                            Trace.WriteLine(e,"获取失败");
+                        }
+
+                    });
+                    tasks.Add(t);
+                });
+            await Task.WhenAll(tasks);
+
 
             IsFetching = false;
             FetchingDone = true;
+            if (!flag)
+            {
+                return false;
+            }
             return true;
         }
     }

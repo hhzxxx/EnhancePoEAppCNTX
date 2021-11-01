@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnhancePoE", "EnhancePoE\En
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SetupCRE2", "SetupCRE2\SetupCRE2.wixproj", "{1E01E3D3-9A5B-4869-9762-2AC5C8122C25}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup1", "Setup1\Setup1.vdproj", "{D8B62C60-EE2C-402E-8A88-84FA0B86C369}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,16 @@ Global
 		{1E01E3D3-9A5B-4869-9762-2AC5C8122C25}.Release|x64.ActiveCfg = Release|x86
 		{1E01E3D3-9A5B-4869-9762-2AC5C8122C25}.Release|x86.ActiveCfg = Release|x86
 		{1E01E3D3-9A5B-4869-9762-2AC5C8122C25}.Release|x86.Build.0 = Release|x86
+		{D8B62C60-EE2C-402E-8A88-84FA0B86C369}.Debug|Any CPU.ActiveCfg = Debug
+		{D8B62C60-EE2C-402E-8A88-84FA0B86C369}.Debug|ARM.ActiveCfg = Debug
+		{D8B62C60-EE2C-402E-8A88-84FA0B86C369}.Debug|ARM64.ActiveCfg = Debug
+		{D8B62C60-EE2C-402E-8A88-84FA0B86C369}.Debug|x64.ActiveCfg = Debug
+		{D8B62C60-EE2C-402E-8A88-84FA0B86C369}.Debug|x86.ActiveCfg = Debug
+		{D8B62C60-EE2C-402E-8A88-84FA0B86C369}.Release|Any CPU.ActiveCfg = Release
+		{D8B62C60-EE2C-402E-8A88-84FA0B86C369}.Release|ARM.ActiveCfg = Release
+		{D8B62C60-EE2C-402E-8A88-84FA0B86C369}.Release|ARM64.ActiveCfg = Release
+		{D8B62C60-EE2C-402E-8A88-84FA0B86C369}.Release|x64.ActiveCfg = Release
+		{D8B62C60-EE2C-402E-8A88-84FA0B86C369}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
