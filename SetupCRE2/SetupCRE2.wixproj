@@ -6,13 +6,14 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>1e01e3d3-9a5b-4869-9762-2ac5c8122c25</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>CRESetup</OutputName>
+    <OutputName>ChaosEnhance2</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug</DefineConstants>
+    <Cultures>zh-CN</Cultures>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
